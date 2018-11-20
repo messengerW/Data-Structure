@@ -1,4 +1,4 @@
-//														堆分配串
+//								堆分配串
 #include<stdio.h>
 #include<stdlib.h>
 #include<malloc.h>
@@ -98,10 +98,8 @@ void Substring(HString S, HString *Sub, int pos, int len)
 			pos++;
 		}
 	}
-	/*
 	else
 		printf("ERROR !\n");
-	*/
 }
 
 int Compare(HString S1, HString S2)
@@ -250,7 +248,6 @@ int main()
 	Print(Sub);
 	printf("\n");
 	
-	
 	printf("请输入两个串，判断它们是否相同（以 / 结束）：\n");
 	printf("S1 : ");
 	while(1)
@@ -298,7 +295,6 @@ int main()
 	printf("\n");
 	return 0;
 }
-
 
 
 
