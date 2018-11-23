@@ -15,7 +15,7 @@ void function(BiTree T)
 //	应用函数，可视情况更改
 {
 	printf("%c ",T->data);				//结点元素打印
-	//printf("%c\t%d",T->data,T);			//详细信息打印
+	//printf("%c\t%d\n",T->data,T);			//详细信息打印
 }
 
 void InitBiTree(BiTree *T)
@@ -124,23 +124,70 @@ BiTree RightChild(BiTree T, BiTree p)
 }
 
 BiTree LeftSibling(BiTree T, BiTree p)
-//	查找结点p的??兄弟
+//	查找结点p的左兄弟
 {
 	BiTree q;
 	q = Parent(T,p);
-	if( q && q->rchild == p )
+	if( q->lchild && q->lchild != p )		//p有左兄弟而且不是p自己
 		return q->lchild;
-	return NULL;
+	else
+		return NULL;
 }
 
 BiTree RightSibling(BiTree T, BiTree p)
-//	查找结点p的??兄弟
+//	查找结点p的右兄弟
 {
 	BiTree q;
 	q = Parent(T,p);
-	if( q && q->lchild == p )
+	if( q->rchild && q->rchild != p )		//p有右兄弟而且不是p自己
 		return q->rchild;
-	return NULL;
+	else
+		return NULL;
+}
+
+void InsertChild(BiTree *T, BiTree *p, char flag, BiTree *c)
+{
+	BiTree q;
+	if( *T && *c && !((*c)->rchild) )		//T不空，c不空，c右子树空
+	{
+		if( flag == 'l' )			//flag值为l，插入c为p的左子树
+		{
+			q = (*p)->lchild;
+			(*p)->lchild = *c;
+			(*c)->rchild = q;
+		}
+		else if( flag == 'r' )		//flag值为r，插入c为p的右子树
+		{
+			q = (*p)->rchild;
+			(*p)->rchild = *c;
+			(*c)->rchild = q;
+		}
+		else
+			printf("Error !\n");
+	}
+	else
+		printf("Error !\n");
+}
+
+void DeleteChild(BiTree *T, BiTree *p, char flag)
+{
+	if( *T && *p )
+	{
+		if( flag == 'l' )
+		{
+			free( (*p)->lchild );
+			(*p)->lchild = NULL;
+		}
+		else if( flag == 'r' )
+		{
+			free( (*p)->rchild );
+			(*p)->rchild = NULL;
+		}
+		else
+			printf("Error !\n");
+	}
+	else
+		printf("Error !\n");
 }
 
 BiTree CopyBiTree(BiTree T, BiTree p)
@@ -199,115 +246,134 @@ void PostOrderTraverse(BiTree T, void(*function)(BiTree T))
 	}
 }
 
-
-
 int main()
 {
 	int n = 0;
-	ElemType ch1,ch2,ch3,ch4, flag1, flag2;
-	BiTree T, p, p1, p2, copy;
+	ElemType ch, flag;
+	BiTree T, p, p1, p2, p3, p4, copy, child, New;
 	
 	InitBiTree(&T);
 	InitBiTree(&p);
 	InitBiTree(&p1);
 	InitBiTree(&p2);
 	InitBiTree(&copy);
+	InitBiTree(&child);
 
-	printf("请按照相应遍历顺序输入结点值：");
+	printf("= = = > 请按照相应遍历顺序输入结点值：");
 	CreateBiTree(&T);
-	printf("\n");
-	
-	printf("先序遍历二叉树：");
+	getchar();
+	printf("\t先序遍历二叉树：");
 	PreOrderTraverse(T,function);
-	printf("\n");
-	printf("中序遍历二叉树：");
+	printf("\n\t中序遍历二叉树：");
 	InOrderTraverse(T,function);
-	printf("\n");
-	printf("后序遍历二叉树：");
+	printf("\n\t后序遍历二叉树：");
 	PostOrderTraverse(T,function);
-	printf("\n\n");
+	printf("\n");
 	
 	CountNode(T,&n);
-	printf("此二叉树的深度为：%d\t节点数为：%d\n",BiTreeDepth(T),n);
-	printf("根结点的地址为：%d\t根结点所储存的元素为：%c\n",Root(T),Root(T)->data);
+	printf("\t此二叉树的深度为：%d\t节点数为：%d\n",BiTreeDepth(T),n);
+	printf("\t根结点的地址为：%d\t根结点所储存的元素为：%c\n",Root(T),Root(T)->data);
 	
-	printf("\n你输入一个字符，我来查找它所在的结点：");
-	ch1 = getche();
-	if( Locate(T,ch1) )
+	printf("\n= = = > 你想删除哪个结点的子树？ ");
+	ch = getche();
+	p = Locate(T,ch);
+	printf("\n\t你想删除 %c 的左子树还是右子树？（ l / r ）");
+	flag = getche();
+	DeleteChild(&T,&p,flag);
+	printf("\n\t删除成功，先序遍历删除后的新树：");
+	PreOrderTraverse(T,function);
+	printf("\n");
+	
+	printf("\n= = = > 你输入一个字符，我来查找它的地址：");
+	ch = getche();
+	if( Locate(T,ch) )
 	{
-		printf("\n储存该字符的结点地址为：%d\n",Locate(T,ch1));
+		printf("\n\t储存该字符的结点地址为：%d\n",Locate(T,ch));
 	}
 	else
-		printf("\n二叉树中没有该结点！\n");
+		printf("\n\t二叉树中没有该结点！\n");
 	printf("\n");
 	
-	printf("你输入一个字符，我来查找它的双亲：");
-	ch2 = getche();
-	p = Locate(T,ch2);
+	printf("= = = > 你输入一个字符，我来查找它的双亲：");
+	ch = getche();
+	p = Locate(T,ch);
 	if( p == Root(T) )
-		printf("\n该结点为根结点，无双亲\n");
+		printf("\n\t该结点为根结点，无双亲\n");
 	else if(p)
-		printf("\n该结点的双亲地址为：%d\t所储存的元素为：%c\n",Parent(T,p),Parent(T,p)->data);
+		printf("\n\t该结点的双亲地址为：%d\t所储存的元素为：%c\n",Parent(T,p),Parent(T,p)->data);
 	else
-		printf("\n二叉树中没有该结点！\n");
+		printf("\n\t二叉树中没有该结点！\n");
 	printf("\n");
 	
-	printf("你输入一个字符，我来查找它的孩子：");
-	ch3 = getche();
-	p1 = Locate(T,ch3);
+	printf("= = = > 你输入一个字符，我来查找它的孩子：");
+	ch = getche();
+	p1 = Locate(T,ch);
 	if(p1)
 	{
 		if( BiTreeDepth(p1) >= 1 )
 		{
 			if( BiTreeDepth(p1)==1 )
-				printf("\n该结点为叶子结点，没有孩子\n");
+				printf("\n\t该结点为叶子结点，没有孩子\n");
 			if( !BiTreeEmpty(p1->lchild) )
 			{
-				printf("\n该结点的左孩子为：%d\t所储存的元素为：%c\n",LeftChild(T,p1),LeftChild(T,p1)->data);
+				printf("\n\t该结点的左孩子为：%d\t所储存的元素为：%c\n",LeftChild(T,p1),LeftChild(T,p1)->data);
 				if( !BiTreeEmpty(p1->rchild) )
-					printf("该结点的右孩子为：%d\t所储存的元素为：%c\n",RightChild(T,p1),RightChild(T,p1)->data);
+					printf("\t该结点的右孩子为：%d\t所储存的元素为：%c\n",RightChild(T,p1),RightChild(T,p1)->data);
 			}
 		}
 	}
 	else
-		printf("\n二叉树中没有该结点！\n");
+		printf("\n\t二叉树中没有该结点！\n");
 	printf("\n");
 	
-	printf("你输入一个字符，我来查找它的兄弟：");
-	ch4 = getche();
-	p2 = Locate(T,ch4);
+	printf("= = = > 你输入一个字符，我来查找它的兄弟：");
+	ch = getche();
+	p2 = Locate(T,ch);		//定位
+	p3 = Parent(T,p2);		//p3表示p2的父母
 	if(p2)
 	{
 		if( p2 == Root(T) )
-			printf("\n该结点为根结点，没有孩子\n");
-		else if( LeftSibling(T,p2) )
-			printf("\n该结点的左兄弟为：%d\t所储存的元素为：%c\n",LeftSibling(T,p1),LeftSibling(T,p1)->data);
-		else
-			printf("\n该结点的右兄弟为：%d\t所储存的元素为：%c\n",RightSibling(T,p1),RightSibling(T,p1)->data);
+			printf("\n\t该结点为根结点，没有兄弟\n");
+		if( LeftSibling(T,p2) )
+			printf("\n\t该结点的左兄弟为：%d\t所储存的元素为：%c\n",LeftSibling(T,p2),LeftSibling(T,p2)->data);
+		if( RightSibling(T,p2) )
+			printf("\n\t该结点的右兄弟为：%d\t所储存的元素为：%c\n",RightSibling(T,p2),RightSibling(T,p2)->data);
+		
 	}
 	else
-		printf("\n二叉树中没有该结点！\n");
+		printf("\n\t二叉树中没有该结点！\n");
 	printf("\n");
 	
-	printf("你想要复制这棵二叉树吗？（ y / n ）");
-	flag1 = getche();
-	if( flag1 == 'y' )
+	printf("= = = > 按照相应顺序输入你想插入的子树：");
+	CreateBiTree(&child);
+	printf("\t输入你想插入的位置：");
+	ch = getche();
+	p4 = Locate(T,ch);
+	printf("\t%d\n",p4);
+	printf("\t你想插入到%c的左子树还是右子树（ l / r ）？",p4->data);
+	flag = getche();
+	InsertChild(&T,&p4,flag,&child);
+	printf("\n\tBingo ! 先序遍历新树：");
+	PreOrderTraverse(T,function);
+	printf("\n");
+	
+	printf("\n= = = > 你想要复制这棵二叉树吗？（ y / n ）");
+	flag = getche();
+	if( flag == 'y' )
 	{
 		CopyBiTree(T,copy);
-		printf("\n复制成功\t");
-		printf("先序遍历二叉树：");
+		printf("\n\tBingo ! 先序遍历二叉树：");
 		PreOrderTraverse(T,function);
 		printf("\n");
 	}
 	printf("\n");
 	
-	printf("你要清空二叉树吗？（ y / n ）");
-	flag2 = getche();
-	if( flag2 == 'y' )
+	printf("= = = > 你要清空二叉树吗？（ y / n ）");
+	flag = getche();
+	if( flag == 'y' )
 	{
 		DestroyBiTree(&T);
-		printf("\n清空成功\t");
-		printf("先序遍历二叉树：");
+		printf("\n\tBingo ! 先序遍历二叉树：");
 		PreOrderTraverse(T,function);
 		printf("\n");
 	}
@@ -321,7 +387,13 @@ int main()
 
 
 
-/*
+/*		
+	-+a##*b##-c##d##/e##f##
+
+	T:	12##3##
+		
+	c:	45###
+
 	1.Locate查找函数，在主函数中键入字符ch时，用scanf就会出问题，查不到要查的字符，但是
 	  如果用getche就可以查到。另外我觉得这个Locate函数也有点问题，如果要查找的字符不在
 	  二叉树中。。。诶 不对，好像没问题，不存在的话就会返回0.
