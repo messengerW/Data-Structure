@@ -1,6 +1,5 @@
 #include<stdio.h>
 #include<stdlib.h>
-#include<malloc.h>
 #include<math.h>
 
 #define EQ(a,b) ( (a) == (b) )
@@ -13,13 +12,13 @@ typedef char ElemType;
 
 typedef struct{
 	KeyType key;
-	//ElemType e;		 Îª·½±ã²âÊÔ£¬ÕâÀïÔİÊ±²»´¢´æÊı¾İÏî£¬Ö»´¢´æ¹Ø¼ü×Ö
+	//ElemType e;		 ä¸ºæ–¹ä¾¿æµ‹è¯•ï¼Œè¿™é‡Œæš‚æ—¶ä¸å‚¨å­˜æ•°æ®é¡¹ï¼Œåªå‚¨å­˜å…³é”®å­—
 }RedType;
 
 typedef struct{
 	int length;
 	RedType r[MAXSIZE+1];
-}SqList;				// ÓÃË³Ğò±í×÷Îª´æ´¢½á¹¹
+}SqList;				// ç”¨é¡ºåºè¡¨ä½œä¸ºå­˜å‚¨ç»“æ„
 
 int CreateSqList(SqList *L)
 {
@@ -27,11 +26,11 @@ int CreateSqList(SqList *L)
 	L->length = 0;
 	for( i = 1; i <= MAXSIZE; i++ )
 	{
-		printf("ÇëÊäÈëµÚ %d ¸öÊı¾İ£º",i);
+		printf("è¯·è¾“å…¥ç¬¬ %d ä¸ªæ•°æ®ï¼š",i);
 		scanf("%d",&L->r[i].key);
 		L->length++;
 	}
-	printf("\n´´½¨Íê±Ï¡£");
+	printf("\nåˆ›å»ºå®Œæ¯•ã€‚");
 }
 
 void Straight_Insert_Sort(SqList *L)
@@ -55,7 +54,7 @@ void Print(SqList L)
 	int i;
 	for( i = 1; i <= MAXSIZE; i++ )
 	{
-		//printf("%c --- %d\n",L.r[i].e,L.r[i].key);	ÏêÏ¸ĞÅÏ¢´òÓ¡
+		//printf("%c --- %d\n",L.r[i].e,L.r[i].key);	è¯¦ç»†ä¿¡æ¯æ‰“å°
 		printf("  %d",L.r[i].key);
 	}
 	printf("\n");
@@ -67,11 +66,11 @@ int main()
 {
 	SqList L;
 	CreateSqList(&L);
-	printf("Äã½¨Á¢µÄË³Ğò±íÎª£º\n");
+	printf("ä½ å»ºç«‹çš„é¡ºåºè¡¨ä¸ºï¼š\n");
 	Print(L);
 
 	Straight_Insert_Sort(&L);
-	printf("¾­¹ı <Ö±½Ó²åÈëÅÅĞò> ºó£º\n");
+	printf("ç»è¿‡ <ç›´æ¥æ’å…¥æ’åº> åï¼š\n");
 	Print(L);
 	
 	return 0;
