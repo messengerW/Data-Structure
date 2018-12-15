@@ -1,8 +1,5 @@
 #include<stdio.h>
 
-#define EQ(a,b) ( (a) == (b) )
-#define LT(a,b) ( (a) <  (b) )
-#define LQ(a,b) ( (a) <= (b) )
 #define MAXSIZE 8
 
 typedef int KeyType;
@@ -31,18 +28,20 @@ int CreateSqList(SqList *L)
 	printf("\n创建完毕。");
 }
 
-void Straight_Insert_Sort(SqList *L)
+void Bubble_Sort(SqList *L)
 {
 	int i, j;
-	for( i = 2; i <= L->length; i++ )
+	for( i = 1; i < L->length; i++ )
 	{
-		if( LT(L->r[i].key,L->r[i-1].key) )
+		for( j = 1; j < L->length-i+1; j++ )
 		{
-			L->r[0] = L->r[i];
-			L->r[i] = L->r[i-1]; 
-			for( j = i-2; LT(L->r[0].key,L->r[j].key); j-- )
-				L->r[j+1] = L->r[j];
-			L->r[j+1] = L->r[0];
+			if( L->r[j].key > L->r[j+1].key )
+			{
+				//	用闲置的r[0]作为中转栈
+				L->r[0] = L->r[j];
+				L->r[j] = L->r[j+1];
+				L->r[j+1] = L->r[0];
+			}
 		}
 	}
 }
@@ -67,8 +66,8 @@ int main()
 	printf("你建立的顺序表为：\n");
 	Print(L);
 
-	Straight_Insert_Sort(&L);
-	printf("经过 <直接插入排序> 后：\n");
+	Bubble_Sort(&L);
+	printf("经过 <冒泡排序> 后：\n");
 	Print(L);
 	
 	return 0;
