@@ -1,9 +1,12 @@
 #include<stdio.h>
+#include<stdlib.h>
+#include<malloc.h>
+#include<math.h>
 
 #define EQ(a,b) ( (a) == (b) )
 #define LT(a,b) ( (a) <  (b) )
 #define LQ(a,b) ( (a) <= (b) )
-#define MAXSIZE 8
+#define MAXSIZE 5
 
 typedef int KeyType;
 typedef char ElemType;
