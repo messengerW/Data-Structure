@@ -67,7 +67,7 @@ int main()
 	Print(L);
 
 	Bubble_Sort(&L);
-	printf("经过 <冒泡排序> 后：\n");
+	printf("经过 < 冒泡排序 > 后：\n");
 	Print(L);
 	
 	return 0;
