@@ -31,16 +31,16 @@ int CreateSqList(SqList *L)
 void Bubble_Sort(SqList *L)
 {
 	int i, j;
-	for( i = 1; i < L->length; i++ )
+	for( i = 2; i <= L->length; i++ )
 	{
-		for( j = 1; j < L->length-i+1; j++ )
+		for( j = i; j > 1; j-- )
 		{
-			if( L->r[j].key > L->r[j+1].key )
+			if( L->r[j].key < L->r[j-1].key )
 			{
 				//	用闲置的r[0]作为中转栈
 				L->r[0] = L->r[j];
-				L->r[j] = L->r[j+1];
-				L->r[j+1] = L->r[0];
+				L->r[j] = L->r[j-1];
+				L->r[j-1] = L->r[0];
 			}
 		}
 	}
